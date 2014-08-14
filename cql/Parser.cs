@@ -22,11 +22,11 @@ namespace cql
 				return;
 			}
 
-			//if (args.Count() == 1)
-			//{
-			//	GenerateHelp(assembly);
-			//	return;
-			//}
+			if (args.Count() == 1 && args[0].Equals("help", StringComparison.OrdinalIgnoreCase))
+			{
+				GenerateHelp(assembly);
+				return;
+			}
 
 			if (args.Count() >= 2)
 			{
@@ -43,12 +43,6 @@ namespace cql
 			string app = args[0];
 			string verb = args[1];
 			string[] param = args.Skip(2).ToArray();
-
-			if (app.Equals("help", StringComparison.OrdinalIgnoreCase))
-			{
-				GenerateHelp(assembly);
-				return;
-			}
 
 			// get the app
 			var _app = (from a in GetApps(assembly)

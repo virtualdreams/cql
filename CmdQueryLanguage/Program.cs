@@ -38,7 +38,7 @@ namespace CmdQueryLanguage
 			Console.WriteLine("domain list by float {0}", id);
 		}
 
-		[Verb(Description = "List the domain given by name.", Weight=99)]
+		[Verb(Description = "List the domain given by name.")]
 		public void List(string name)
 		{
 			Console.WriteLine("domain list by name {0}", name);
@@ -66,10 +66,4 @@ namespace CmdQueryLanguage
 			Console.WriteLine("user list {0}", id);
 		}
 	}
-
-	
-
-	
-
-	
 }

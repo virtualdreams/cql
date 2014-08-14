@@ -13,12 +13,13 @@ namespace cql
 
 		public App(Type type)
 		{
-			Names = new List<string>();
+			// init
 			Type = type;
-
-			Names.Add(Type.Name.ToLowerInvariant());
-
+			Names = new List<string>();
 			var attr = Type.GetAttribute<AppAttribute>();
+			
+			// add name to list
+			Names.Add(Type.Name.ToLowerInvariant());
 
 			Description = attr.Description;
 

@@ -15,12 +15,21 @@ namespace cql
 
 		public Verb(MethodInfo method)
 		{
-			Names = new List<string>();
+			// init
 			Method = method;
-
-			Names.Add(Method.Name.ToLowerInvariant());
-
+			Names = new List<string>();
 			var attr = Method.GetAttribute<VerbAttribute>();
+
+
+			// add name to list
+			if (!String.IsNullOrEmpty(attr.Name))
+			{
+				Names.Add(attr.Name.ToLowerInvariant());
+			}
+			else
+			{
+				Names.Add(Method.Name.ToLowerInvariant());
+			}
 
 			Description = attr.Description;
 			Weight = attr.Weight;
