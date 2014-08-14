@@ -11,11 +11,22 @@ namespace cql
 	/// </summary>
 	public class Parser
 	{
+		private Type[] Types { get; set; }
+
+		public Parser()
+			: this(Assembly.GetEntryAssembly().GetTypes())
+		{ }
+
+		public Parser(params Type[] types)
+		{
+			this.Types = types;
+		}
+		
 		/// <summary>
 		/// Run the parser for the given arguments.
 		/// </summary>
 		/// <param name="args">List of arguments</param>
-		public void Run(string[] args, Assembly assembly)
+		public void Run(string[] args)
 		{
 			if (args.None() || args.All(a => String.IsNullOrEmpty(a)))
 			{
@@ -24,13 +35,13 @@ namespace cql
 
 			if (args.Count() == 1 && args[0].Equals("help", StringComparison.OrdinalIgnoreCase))
 			{
-				GenerateHelp(assembly);
+				GenerateHelp();
 				return;
 			}
 
 			if (args.Count() >= 2)
 			{
-				RunInternal(args, assembly);
+				RunInternal(args);
 			}
 		}
 
@@ -38,14 +49,14 @@ namespace cql
 		/// Parse the arguments and try to run the app.
 		/// </summary>
 		/// <param name="args">List of arguments</param>
-		private void RunInternal(string[] args, Assembly assembly)
+		private void RunInternal(string[] args)
 		{
 			string app = args[0];
 			string verb = args[1];
 			string[] param = args.Skip(2).ToArray();
 
 			// get the app
-			var _app = (from a in GetApps(assembly)
+			var _app = (from a in GetApps()
 						where a.Names.Contains(app.ToLowerInvariant())
 						select a).Single();
 
@@ -74,9 +85,9 @@ namespace cql
 		/// </summary>
 		/// <param name="assembly">The assembly to search for.</param>
 		/// <returns></returns>
-		private IEnumerable<App> GetApps(Assembly assembly)
+		private IEnumerable<App> GetApps()
 		{
-			return (from a in assembly.GetTypes()
+			return (from a in this.Types
 					where a.IsDefined(typeof(AppAttribute), true)
 					select new App(a)).ToList();
 		}
@@ -170,12 +181,12 @@ namespace cql
 			
 		}
 
-		private void GenerateHelp(Assembly assembly)
+		private void GenerateHelp()
 		{
 			Console.WriteLine("Usage: app verb [value [value [...] ] ]");
 			Console.WriteLine();
 			
-			var _apps = GetApps(assembly);
+			var _apps = GetApps();
 
 			foreach (var app in _apps)
 			{
